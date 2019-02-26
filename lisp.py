@@ -68,7 +68,6 @@ def standard_environment():
 global_env = standard_environment()
 
 def eval(x: Exp, env=global_env):
-    print(x)
     if isinstance(x, Symbol):
         return env[x]
     elif isinstance(x, Number):
@@ -85,5 +84,17 @@ def eval(x: Exp, env=global_env):
         args = [eval(arg, env) for arg in x[1:]]
         return proc(*args)
 
+def repl(prompt='lisp.py> '):
+    while True:
+        val = eval(parse(input(prompt)))
+        if val is not None:
+            print(schemestr(val))
+
+def schemestr(exp):
+    if isinstance(exp, List):
+        return '(' + ' '.join(map(schemestr, exp)) + ')'
+    else:
+        return str(exp)
+
 program = '(begin (define r 10) (* pi (* r r)))'
-print(eval(parse(program)))
+repl()
